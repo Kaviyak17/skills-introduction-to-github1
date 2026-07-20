@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NextStep | Student Jobs & Volunteering</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">NextStep</div>
+      <nav class="nav-links" aria-label="Main navigation">
+        <button class="nav-btn active" data-page="home">Home</button>
+        <button class="nav-btn" data-page="jobs">Jobs</button>
+        <button class="nav-btn" data-page="volunteer">Volunteer</button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="page active" id="home-page">
+        <div class="hero">
+          <h1>Find your first opportunity</h1>
+          <p>
+            Discover part-time jobs and volunteer opportunities made for high school students.
+          </p>
+        </div>
+
+        <section class="panel">
+          <h2>Browse opportunities</h2>
+          <div class="filter-grid">
+            <input id="search-input" type="search" placeholder="Search by title, tag, or keyword" />
+            <select id="location-filter">
+              <option value="">All locations</option>
+            </select>
+            <select id="age-filter">
+              <option value="">All age requirements</option>
+            </select>
+            <select id="type-filter">
+              <option value="">All types</option>
+              <option value="job">Jobs</option>
+              <option value="volunteer">Volunteer</option>
+            </select>
+          </div>
+          <div id="category-buttons" class="category-buttons" aria-label="Filter by category"></div>
+          <div id="home-results" class="card-grid"></div>
+        </section>
+      </section>
+
+      <section class="page" id="jobs-page">
+        <section class="panel">
+          <h2>Part-time jobs</h2>
+          <p class="subtitle">Explore student-friendly jobs in your area.</p>
+          <div id="jobs-results" class="card-grid"></div>
+        </section>
+      </section>
+
+      <section class="page" id="volunteer-page">
+        <section class="panel">
+          <h2>Volunteer opportunities</h2>
+          <p class="subtitle">Build impact, skills, and hours for graduation goals.</p>
+          <div id="volunteer-results" class="card-grid"></div>
+        </section>
+
+        <section class="panel tracker">
+          <h2>Volunteer hours tracker</h2>
+          <p>Track your progress toward 40 community service hours.</p>
+          <div class="tracker-controls">
+            <label for="hours-input">Completed hours</label>
+            <input id="hours-input" type="number" min="0" step="0.5" placeholder="e.g. 12.5" />
+            <button id="update-hours">Update progress</button>
+          </div>
+          <div class="progress-shell" aria-label="Volunteer hours progress">
+            <div id="hours-progress" class="progress-bar"></div>
+          </div>
+          <p id="hours-text" class="hours-text">0 / 40 hours completed</p>
+        </section>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
