@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TeenHub</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f5f7fb;
+      text-align: center;
+    }
+    h1 {
+      color: #333;
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      margin: 20px auto;
+      width: 300px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+<h1>TeenHub 💼</h1>
+<p>Find jobs and volunteer opportunities for high school students</p>
+
+<div class="card">
+  <h3>Retail Associate</h3>
+  <p>Location: Mississauga</p>
+  <p>Age: 16+</p>
+  <p>Tag: No experience needed</p>
+</div>
+
+<div class="card">
+  <h3>Volunteer Helper</h3>
+  <p>Location: Community Centre</p>
+  <p>Hours: 10</p>
+</div>
+
+</body>
+</html>
