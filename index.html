@@ -19,29 +19,40 @@
     <main>
       <section class="page active" id="home-page">
         <div class="hero">
-          <h1>Find your first opportunity</h1>
+          <h1>Find Jobs &amp; Volunteer Opportunities for High School Students</h1>
           <p>
-            Discover part-time jobs and volunteer opportunities made for high school students.
+            Discover beginner-friendly opportunities, build skills, and track your volunteer impact.
           </p>
+          <label class="visually-hidden" for="search-input">Search opportunities</label>
+          <input
+            id="search-input"
+            type="search"
+            placeholder="Search by title, tag, or keyword"
+            aria-label="Search opportunities by title, tag, or keyword"
+          />
         </div>
 
         <section class="panel">
           <h2>Browse opportunities</h2>
           <div class="filter-grid">
-            <input id="search-input" type="search" placeholder="Search by title, tag, or keyword" />
             <select id="location-filter">
               <option value="">All locations</option>
             </select>
             <select id="age-filter">
-              <option value="">All age requirements</option>
+              <option value="">All age ranges</option>
+              <option value="14">14+</option>
+              <option value="15">15+</option>
+              <option value="16">16+</option>
             </select>
             <select id="type-filter">
               <option value="">All types</option>
               <option value="job">Jobs</option>
               <option value="volunteer">Volunteer</option>
             </select>
+            <select id="tag-filter">
+              <option value="">All tags</option>
+            </select>
           </div>
-          <div id="category-buttons" class="category-buttons" aria-label="Filter by category"></div>
           <div id="home-results" class="card-grid"></div>
         </section>
       </section>
@@ -72,7 +83,7 @@
           <div class="progress-shell" aria-label="Volunteer hours progress">
             <div id="hours-progress" class="progress-bar"></div>
           </div>
-          <p id="hours-text" class="hours-text">0 / 40 hours completed</p>
+          <p id="hours-text" class="hours-text" aria-live="polite">0 / 40 hours completed</p>
         </section>
       </section>
     </main>

@@ -53,12 +53,10 @@ const searchInput = document.getElementById("search-input");
 const locationFilter = document.getElementById("location-filter");
 const ageFilter = document.getElementById("age-filter");
 const typeFilter = document.getElementById("type-filter");
-const categoryButtons = document.getElementById("category-buttons");
+const tagFilter = document.getElementById("tag-filter");
 const homeResults = document.getElementById("home-results");
 const jobsResults = document.getElementById("jobs-results");
 const volunteerResults = document.getElementById("volunteer-results");
-
-let selectedTag = "";
 
 function uniqueValues(values) {
   return [...new Set(values)].sort();
@@ -72,39 +70,14 @@ function setupFilters() {
     locationFilter.appendChild(option);
   });
 
-  uniqueValues(listings.map((item) => item.minAge)).forEach((age) => {
+  uniqueValues(listings.flatMap((item) => item.tags)).forEach((tag) => {
     const option = document.createElement("option");
-    option.value = String(age);
-    option.textContent = `${age}+`;
-    ageFilter.appendChild(option);
-  });
-
-  const allTags = uniqueValues(listings.flatMap((item) => item.tags));
-  const allButton = document.createElement("button");
-  allButton.className = "category-btn active";
-  allButton.textContent = "All categories";
-  allButton.dataset.tag = "";
-  categoryButtons.appendChild(allButton);
-
-  allTags.forEach((tag) => {
-    const button = document.createElement("button");
-    button.className = "category-btn";
-    button.textContent = tag;
-    button.dataset.tag = tag;
-    categoryButtons.appendChild(button);
-  });
-
-  categoryButtons.addEventListener("click", (event) => {
-    const target = event.target;
-    if (!(target instanceof HTMLButtonElement)) {
-      return;
-    }
-
-    selectedTag = target.dataset.tag || "";
-    categoryButtons.querySelectorAll(".category-btn").forEach((button) => {
-      button.classList.toggle("active", button === target);
-    });
-    renderListings();
+    option.value = tag;
+    option.textContent = tag
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+    tagFilter.appendChild(option);
   });
 }
 
@@ -113,6 +86,7 @@ function filterListings() {
   const location = locationFilter.value;
   const age = ageFilter.value ? Number(ageFilter.value) : null;
   const type = typeFilter.value;
+  const tag = tagFilter.value;
 
   return listings.filter((listing) => {
     const matchesQuery =
@@ -121,24 +95,39 @@ function filterListings() {
       listing.description.toLowerCase().includes(query) ||
       listing.tags.some((tag) => tag.toLowerCase().includes(query));
     const matchesLocation = !location || listing.location === location;
-    const matchesAge = age === null || listing.minAge === age;
+    const matchesAge = age === null || listing.minAge <= age;
     const matchesType = !type || listing.type === type;
-    const matchesTag = !selectedTag || listing.tags.includes(selectedTag);
+    const matchesTag = !tag || listing.tags.includes(tag);
 
     return matchesQuery && matchesLocation && matchesAge && matchesType && matchesTag;
   });
 }
 
+function formatTag(tag) {
+  if (tag === "no experience needed") {
+    return "No Experience";
+  }
+  if (tag === "walk-in friendly") {
+    return "Walk-In Friendly";
+  }
+  return tag
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
 function cardTemplate(item) {
   return `<article class="card">
-    <h3>${item.title}</h3>
+    <div class="card-header">
+      <h3>${item.title}</h3>
+      <span class="pill">${item.minAge}+</span>
+    </div>
     <div class="meta">
       <span><strong>Location:</strong> ${item.location}</span>
-      <span><strong>Age:</strong> ${item.minAge}+</span>
       <span><strong>Type:</strong> ${item.type === "job" ? "Part-time Job" : "Volunteer"}</span>
     </div>
     <p>${item.description}</p>
-    <div class="tags">${item.tags.map((tag) => `<span class="tag">${tag}</span>`).join("")}</div>
+    <div class="tags">${item.tags.map((tag) => `<span class="tag">${formatTag(tag)}</span>`).join("")}</div>
   </article>`;
 }
 
@@ -186,16 +175,24 @@ function setupTracker() {
   const targetHours = 40;
 
   const updateProgress = () => {
-    const value = Math.max(0, Number(hoursInput.value) || 0);
+    const parsedValue = Number(hoursInput.value);
+    const value = Number.isFinite(parsedValue) ? Math.max(0, parsedValue) : 0;
+    if (!Number.isFinite(parsedValue) || parsedValue < 0) {
+      hoursInput.value = String(value);
+    }
     const progress = Math.min(100, (value / targetHours) * 100);
     progressBar.style.width = `${progress}%`;
+    progressBar.setAttribute("role", "progressbar");
+    progressBar.setAttribute("aria-valuemin", "0");
+    progressBar.setAttribute("aria-valuemax", String(targetHours));
+    progressBar.setAttribute("aria-valuenow", String(Math.min(value, targetHours)));
     hoursText.textContent = `${value} / ${targetHours} hours completed`;
   };
-
   updateButton.addEventListener("click", updateProgress);
+  updateProgress();
 }
 
-[searchInput, locationFilter, ageFilter, typeFilter].forEach((element) => {
+[searchInput, locationFilter, ageFilter, typeFilter, tagFilter].forEach((element) => {
   element.addEventListener("input", renderListings);
 });
 
