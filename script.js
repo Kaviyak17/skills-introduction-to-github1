@@ -1,202 +1,353 @@
 const listings = [
-  {
-    title: "Library Assistant",
-    location: "Downtown",
-    minAge: 15,
-    description: "Help organize shelves, prep displays, and support after-school reading events.",
-    tags: ["no experience needed", "after school"],
-    type: "job"
-  },
-  {
-    title: "Cafe Counter Team Member",
-    location: "Northside",
-    minAge: 16,
-    description: "Take orders, serve drinks, and keep the front counter welcoming during evenings.",
-    tags: ["walk-in friendly", "weekend shifts"],
-    type: "job"
-  },
-  {
-    title: "Pet Store Helper",
-    location: "Lakeside",
-    minAge: 14,
-    description: "Restock small items and greet customers in a student-friendly retail environment.",
-    tags: ["no experience needed", "flexible hours"],
-    type: "job"
-  },
-  {
-    title: "Food Bank Volunteer",
-    location: "Downtown",
-    minAge: 14,
-    description: "Sort donations and build meal kits with community mentors every Saturday.",
-    tags: ["walk-in friendly", "community impact"],
-    type: "volunteer"
-  },
-  {
-    title: "Park Cleanup Crew",
-    location: "West End",
-    minAge: 13,
-    description: "Join local teams to clean trails and public spaces once a week.",
-    tags: ["outdoor", "no experience needed"],
-    type: "volunteer"
-  },
-  {
-    title: "Senior Center Activity Buddy",
-    location: "Northside",
-    minAge: 15,
-    description: "Support board games, reading sessions, and social activities with seniors.",
-    tags: ["service hours", "walk-in friendly"],
-    type: "volunteer"
-  }
+
+{
+title:"Retail Associate",
+location:"Mississauga",
+minAge:16,
+type:"job",
+description:"Help customers, organize products, and gain retail experience.",
+tags:[
+"no experience needed",
+"walk-in friendly"
+]
+},
+
+
+{
+title:"Library Assistant",
+location:"Mississauga",
+minAge:15,
+type:"job",
+description:"Organize books and assist community programs.",
+tags:[
+"after school",
+"flexible hours"
+]
+},
+
+
+{
+title:"Food Bank Volunteer",
+location:"Mississauga",
+minAge:14,
+type:"volunteer",
+description:"Support food sorting and community programs.",
+tags:[
+"community impact",
+"service hours"
+]
+},
+
+
+{
+title:"Community Centre Helper",
+location:"Mississauga",
+minAge:14,
+type:"volunteer",
+description:"Help run activities and events for residents.",
+tags:[
+"volunteer hours",
+"leadership"
+]
+}
+
+
 ];
 
-const searchInput = document.getElementById("search-input");
-const locationFilter = document.getElementById("location-filter");
-const ageFilter = document.getElementById("age-filter");
-const typeFilter = document.getElementById("type-filter");
-const tagFilter = document.getElementById("tag-filter");
-const homeResults = document.getElementById("home-results");
-const jobsResults = document.getElementById("jobs-results");
-const volunteerResults = document.getElementById("volunteer-results");
 
-function uniqueValues(values) {
-  return [...new Set(values)].sort();
-}
 
-function setupFilters() {
-  uniqueValues(listings.map((item) => item.location)).forEach((location) => {
-    const option = document.createElement("option");
-    option.value = location;
-    option.textContent = location;
-    locationFilter.appendChild(option);
-  });
+const searchInput=document.getElementById("search-input");
 
-  uniqueValues(listings.flatMap((item) => item.tags)).forEach((tag) => {
-    const option = document.createElement("option");
-    option.value = tag;
-    option.textContent = tag
-      .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
-    tagFilter.appendChild(option);
-  });
-}
+const locationFilter=document.getElementById("location-filter");
 
-function filterListings() {
-  const query = searchInput.value.trim().toLowerCase();
-  const location = locationFilter.value;
-  const age = ageFilter.value ? Number(ageFilter.value) : null;
-  const type = typeFilter.value;
-  const tag = tagFilter.value;
+const ageFilter=document.getElementById("age-filter");
 
-  return listings.filter((listing) => {
-    const matchesQuery =
-      !query ||
-      listing.title.toLowerCase().includes(query) ||
-      listing.description.toLowerCase().includes(query) ||
-      listing.tags.some((tag) => tag.toLowerCase().includes(query));
-    const matchesLocation = !location || listing.location === location;
-    const matchesAge = age === null || listing.minAge <= age;
-    const matchesType = !type || listing.type === type;
-    const matchesTag = !tag || listing.tags.includes(tag);
+const typeFilter=document.getElementById("type-filter");
 
-    return matchesQuery && matchesLocation && matchesAge && matchesType && matchesTag;
-  });
-}
+const tagFilter=document.getElementById("tag-filter");
 
-function formatTag(tag) {
-  if (tag === "no experience needed") {
-    return "No Experience";
-  }
-  if (tag === "walk-in friendly") {
-    return "Walk-In Friendly";
-  }
-  return tag
-    .split(" ")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-}
 
-function cardTemplate(item) {
-  return `<article class="card">
-    <div class="card-header">
-      <h3>${item.title}</h3>
-      <span class="pill">${item.minAge}+</span>
-    </div>
-    <div class="meta">
-      <span><strong>Location:</strong> ${item.location}</span>
-      <span><strong>Type:</strong> ${item.type === "job" ? "Part-time Job" : "Volunteer"}</span>
-    </div>
-    <p>${item.description}</p>
-    <div class="tags">${item.tags.map((tag) => `<span class="tag">${formatTag(tag)}</span>`).join("")}</div>
-  </article>`;
-}
+const homeResults=document.getElementById("home-results");
 
-function renderTarget(items, targetElement) {
-  if (!items.length) {
-    targetElement.innerHTML = '<p class="empty">No listings match your filters yet.</p>';
-    return;
-  }
+const jobsResults=document.getElementById("jobs-results");
 
-  targetElement.innerHTML = items.map(cardTemplate).join("");
-}
+const volunteerResults=document.getElementById("volunteer-results");
 
-function renderListings() {
-  const filtered = filterListings();
-  renderTarget(filtered, homeResults);
-  renderTarget(filtered.filter((item) => item.type === "job"), jobsResults);
-  renderTarget(filtered.filter((item) => item.type === "volunteer"), volunteerResults);
-}
 
-function setupPageNavigation() {
-  const navButtons = document.querySelectorAll(".nav-btn");
-  const pages = {
-    home: document.getElementById("home-page"),
-    jobs: document.getElementById("jobs-page"),
-    volunteer: document.getElementById("volunteer-page")
-  };
 
-  navButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      navButtons.forEach((navButton) => navButton.classList.remove("active"));
-      button.classList.add("active");
-      const selectedPage = button.dataset.page;
-      Object.entries(pages).forEach(([key, page]) => {
-        page.classList.toggle("active", key === selectedPage);
-      });
-    });
-  });
-}
 
-function setupTracker() {
-  const hoursInput = document.getElementById("hours-input");
-  const updateButton = document.getElementById("update-hours");
-  const progressBar = document.getElementById("hours-progress");
-  const hoursText = document.getElementById("hours-text");
-  const targetHours = 40;
 
-  const updateProgress = () => {
-    const parsedValue = Number(hoursInput.value);
-    const value = Number.isFinite(parsedValue) ? Math.max(0, parsedValue) : 0;
-    if (!Number.isFinite(parsedValue) || parsedValue < 0) {
-      hoursInput.value = String(value);
-    }
-    const progress = Math.min(100, (value / targetHours) * 100);
-    progressBar.style.width = `${progress}%`;
-    progressBar.setAttribute("role", "progressbar");
-    progressBar.setAttribute("aria-valuemin", "0");
-    progressBar.setAttribute("aria-valuemax", String(targetHours));
-    progressBar.setAttribute("aria-valuenow", String(Math.min(value, targetHours)));
-    hoursText.textContent = `${value} / ${targetHours} hours completed`;
-  };
-  updateButton.addEventListener("click", updateProgress);
-  updateProgress();
-}
+function setupFilters(){
 
-[searchInput, locationFilter, ageFilter, typeFilter, tagFilter].forEach((element) => {
-  element.addEventListener("input", renderListings);
+
+[...new Set(listings.map(x=>x.location))]
+.forEach(location=>{
+
+let option=document.createElement("option");
+
+option.value=location;
+
+option.textContent=location;
+
+locationFilter.appendChild(option);
+
 });
 
+
+
+[...new Set(listings.flatMap(x=>x.tags))]
+.forEach(tag=>{
+
+
+let option=document.createElement("option");
+
+option.value=tag;
+
+option.textContent=tag;
+
+tagFilter.appendChild(option);
+
+
+});
+
+
+}
+
+
+
+
+
+
+
+function card(item){
+
+return `
+
+<div class="card">
+
+<h3>${item.title}</h3>
+
+<p>
+📍 ${item.location}
+</p>
+
+<p>
+Age: ${item.minAge}+
+</p>
+
+
+<p>
+${item.description}
+</p>
+
+
+<div class="tags">
+
+${item.tags.map(tag=>`
+
+<span class="tag">
+${tag}
+</span>
+
+`).join("")}
+
+</div>
+
+
+</div>
+
+`;
+
+}
+
+
+
+
+
+function filterListings(){
+
+
+let search=searchInput.value.toLowerCase();
+
+
+return listings.filter(item=>{
+
+
+return (
+
+item.title.toLowerCase().includes(search)
+
+||
+
+item.description.toLowerCase().includes(search)
+
+)
+
+&&
+
+(!locationFilter.value ||
+item.location===locationFilter.value)
+
+&&
+
+(!ageFilter.value ||
+item.minAge<=Number(ageFilter.value))
+
+&&
+
+(!typeFilter.value ||
+item.type===typeFilter.value)
+
+&&
+
+(!tagFilter.value ||
+item.tags.includes(tagFilter.value))
+
+
+});
+
+
+}
+
+
+
+
+
+function render(){
+
+
+let filtered=filterListings();
+
+
+homeResults.innerHTML=
+filtered.map(card).join("");
+
+
+
+jobsResults.innerHTML=
+filtered
+.filter(x=>x.type==="job")
+.map(card)
+.join("");
+
+
+
+volunteerResults.innerHTML=
+filtered
+.filter(x=>x.type==="volunteer")
+.map(card)
+.join("");
+
+
+
+}
+
+
+
+
+
+
+function navigation(){
+
+
+document.querySelectorAll(".nav-btn")
+.forEach(button=>{
+
+
+button.onclick=()=>{
+
+
+document.querySelectorAll(".nav-btn")
+.forEach(btn=>btn.classList.remove("active"));
+
+
+button.classList.add("active");
+
+
+
+document.querySelectorAll(".page")
+.forEach(page=>page.classList.remove("active"));
+
+
+
+document
+.getElementById(button.dataset.page+"-page")
+.classList.add("active");
+
+};
+
+
+});
+
+
+}
+
+
+
+
+
+
+
+function tracker(){
+
+
+const input=document.getElementById("hours-input");
+
+const button=document.getElementById("update-hours");
+
+const bar=document.getElementById("hours-progress");
+
+const text=document.getElementById("hours-text");
+
+
+
+button.onclick=()=>{
+
+
+let hours=Number(input.value)||0;
+
+
+let percent=Math.min((hours/40)*100,100);
+
+
+bar.style.width=
+percent+"%";
+
+
+text.textContent=
+`${hours}/40 hours completed`;
+
+
+};
+
+
+}
+
+
+
+
+
+
+[
+searchInput,
+locationFilter,
+ageFilter,
+typeFilter,
+tagFilter
+
+]
+.forEach(element=>{
+
+element.addEventListener("input",render);
+
+});
+
+
+
 setupFilters();
-setupPageNavigation();
-setupTracker();
-renderListings();
+
+navigation();
+
+tracker();
+
+render();
